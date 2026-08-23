@@ -58,6 +58,7 @@ CREATE TABLE "Event" (
     "nama" VARCHAR(255) NOT NULL,
     "slug" VARCHAR(255) NOT NULL,
     "tanggalPelaksanaan" TIMESTAMPTZ NOT NULL,
+    "tanggalSelesai" TIMESTAMPTZ NOT NULL,
     "lokasi" VARCHAR(255),
     "deskripsi" TEXT,
     "isActive" BOOLEAN NOT NULL DEFAULT true,

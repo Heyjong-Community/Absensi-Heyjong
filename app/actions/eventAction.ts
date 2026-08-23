@@ -11,10 +11,11 @@ export async function actionAddNewEvent(prevState: InitState, formData: FormData
     const nama = formData.get('nama') as string;
     const slug = formData.get('slug') as string;
     const tanggalPelaksanaanRaw = formData.get('tanggalPelaksanaan') as string;
+    const tanggalSelesaiRaw = formData.get('tanggalSelesai') as string;
     const lokasi = formData.get('lokasi') as string;
     const deskripsi = formData.get('deskripsi') as string;
 
-    if (!nama || !slug || !tanggalPelaksanaanRaw) {
+    if (!nama || !slug || !tanggalPelaksanaanRaw || !tanggalSelesaiRaw) {
       return { success: false, error: 'Semua field harus diisi' };
     }
 
@@ -23,7 +24,12 @@ export async function actionAddNewEvent(prevState: InitState, formData: FormData
       return { success: false, error: 'Format tanggal pelaksanaan tidak valid' };
     }
 
-    await addNewEvent(nama, slug, tanggalPelaksanaan, lokasi, deskripsi);
+    const tanggalSelesai = new Date(tanggalSelesaiRaw);
+    if (isNaN(tanggalSelesai.getTime())) {
+      return { success: false, error: 'Format tanggal selesai tidak valid' };
+    }
+
+    await addNewEvent(nama, slug, tanggalPelaksanaan, tanggalSelesai, lokasi, deskripsi);
 
     isSuccess = true;
   } catch (error) {

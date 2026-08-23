@@ -20,6 +20,7 @@ export async function addNewEvent(
   nama: string,
   slug: string,
   tanggalPelaksanaan: Date,
+  tanggalSelesai: Date,
   lokasi?: string,
   deskripsi?: string,
 ) {
@@ -28,6 +29,7 @@ export async function addNewEvent(
       nama,
       slug,
       tanggalPelaksanaan,
+      tanggalSelesai,
       lokasi,
       deskripsi,
     },

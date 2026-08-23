@@ -26,6 +26,14 @@ export const columns: ColumnDef<Event>[] = [
     },
   },
   {
+    accessorKey: 'tanggalSelesai',
+    header: 'Tanggal Selesai',
+    cell: ({ row }) => {
+      const selesai = row.original.tanggalSelesai;
+      return <p>{formatDate(String(selesai))}</p>;
+    },
+  },
+  {
     accessorKey: 'isActive',
     header: 'Status',
     cell: ({ row }) => {

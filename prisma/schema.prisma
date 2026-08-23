@@ -75,6 +75,7 @@ model Event {
   nama               String   @db.VarChar(255)
   slug               String   @db.VarChar(255)
   tanggalPelaksanaan DateTime @db.Timestamptz()
+  tanggalSelesai     DateTime @db.Timestamptz()
   lokasi             String?  @db.VarChar(255)
   deskripsi          String?  @db.Text
   isActive           Boolean  @default(true) @db.Boolean

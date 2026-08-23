@@ -2,10 +2,10 @@
 
 import { actionLogin } from '@/app/actions/authAction';
 import { Button } from '@/components/ui/button';
-import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSeparator } from '@/components/ui/field';
+import { Field, FieldDescription, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { InitState, responseState } from '@/types/global';
-import { GalleryVerticalEnd } from 'lucide-react';
+import Image from 'next/image';
 import Link from 'next/link';
 import React, { useActionState } from 'react';
 
@@ -14,67 +14,245 @@ export default function LoginPage() {
     (prevState, formData) => actionLogin(prevState, formData),
     responseState,
   );
+
   return (
-    //  <div className={cn("flex flex-col gap-6", className)} {...props}>
-    <div className='h-screen flex items-center justify-center p-6'>
-      <div className='flex flex-col gap-6'>
-        {state?.error && (
-          <div className='mb-4 rounded-lg bg-red-50 p-3 text-sm text-red-600 border border-red-200'>{state.error}</div>
-        )}
-        <form action={formAction}>
-          <FieldGroup>
-            <div className='flex flex-col items-center gap-2 text-center'>
-              <Link href='#' className='flex flex-col items-center gap-2 font-medium'>
-                <div className='flex size-8 items-center justify-center rounded-md'>
-                  <GalleryVerticalEnd className='size-6' />
-                </div>
-                <span className='sr-only'>Acme Inc.</span>
+    <main className='min-h-screen bg-[#F7F4ED] text-[#172536]'>
+      <div className='grid min-h-screen lg:grid-cols-2'>
+        {/* =====================================================
+            LEFT - BRANDING
+        ====================================================== */}
+        <section className='relative hidden overflow-hidden bg-[#8E2730] lg:flex'>
+          {/* Decorative circles */}
+          <div className='absolute -left-24 -top-24 h-72 w-72 rounded-full bg-[#EFCB2D] blur-sm' />
+
+          <div className='absolute -bottom-28 -right-20 h-80 w-80 rounded-full bg-white/80 blur-sm' />
+
+          {/* <div className='absolute right-20 top-20 h-24 w-24 rotate-12 rounded-[2rem] bg-[#D77B91]' /> */}
+          <div className='absolute right-20 top-20 h-24 w-24 rotate-12 rounded-[2rem] bg-white/80 blur-md' />
+
+          {/* <div className='absolute bottom-32 left-20 h-16 w-16 rounded-full bg-[#F7F4ED]' /> */}
+
+          {/* Small decorative dots */}
+          <div className='absolute left-[20%] top-[25%] h-3 w-3 rounded-full bg-[#F7F4ED]' />
+          {/* <div className='absolute left-[27%] top-[30%] h-5 w-5 rounded-full bg-[#E58B8B]' /> */}
+          <div className='absolute right-[25%] top-[42%] h-4 w-4 rounded-full bg-red-500 blur-sm' />
+
+          <div className='relative z-10 flex w-full flex-col justify-between p-12 xl:p-16'>
+            {/* Logo */}
+            <div>
+              <Link href='#' className='inline-flex items-center'>
+                {/* <div className='flex h-12 w-12 items-center justify-center rounded-2xl bg-[#172536] text-lg font-black text-white shadow-lg'>
+                  H
+                </div> */}
+                <Image src={`/images/logo-color.png`} width={100} height={100} alt='logo' className='h-24 w-24' />
+
+                {/* <div>
+                  <p className='text-xl font-black tracking-tight text-white'>HEYJONG</p>
+
+                  <p className='text-xs font-medium text-white/75'>COMMUNITY</p>
+                </div> */}
               </Link>
-              <h1 className='text-xl font-bold'>Welcome to Acme Inc.</h1>
-              <FieldDescription>
-                Don&apos;t have an account? <Link href='#'>Sign up</Link>
-              </FieldDescription>
             </div>
-            <Field>
-              <FieldLabel htmlFor='username'>Username</FieldLabel>
-              <Input id='username' type='text' name='username' placeholder='username' required />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor='password'>Password</FieldLabel>
-              <Input id='password' type='password' name='password' placeholder='******' required />
-            </Field>
-            <Field>
-              <Button type='submit' disabled={isPending}>
-                {isPending ? 'Memproses...' : 'Masuk'}
-              </Button>
-            </Field>
-            {/* <FieldSeparator>Or</FieldSeparator>
-            <Field className='grid gap-4 sm:grid-cols-2'>
-              <Button variant='outline' type='button'>
-                <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
-                  <path
-                    d='M12.152 6.896c-.948 0-2.415-1.078-3.96-1.04-2.04.027-3.91 1.183-4.961 3.014-2.117 3.675-.546 9.103 1.519 12.09 1.013 1.454 2.208 3.09 3.792 3.039 1.52-.065 2.09-.987 3.935-.987 1.831 0 2.35.987 3.96.948 1.637-.026 2.676-1.48 3.676-2.948 1.156-1.688 1.636-3.325 1.662-3.415-.039-.013-3.182-1.221-3.22-4.857-.026-3.04 2.48-4.494 2.597-4.559-1.429-2.09-3.623-2.324-4.39-2.376-2-.156-3.675 1.09-4.61 1.09zM15.53 3.83c.843-1.012 1.4-2.427 1.245-3.83-1.207.052-2.662.805-3.532 1.818-.78.896-1.454 2.338-1.273 3.714 1.338.104 2.715-.688 3.559-1.701'
-                    fill='currentColor'
+
+            {/* Main Content */}
+            <div className='max-w-xl'>
+              <div className='mb-6 inline-flex items-center gap-2 rounded-full bg-white/20 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm'>
+                <span className='h-2 w-2 rounded-full bg-[#EFCB2D]' />
+                Welcome, Jongers!
+              </div>
+
+              <h1 className='text-5xl font-black leading-[1.05] tracking-tight text-white xl:text-6xl'>
+                Let&apos;s Grow
+                <br />
+                <span className='text-[#EFCB2D]'>Together</span>
+                <br />
+                & Spread
+                <br />
+                <span className='text-[#EFCB2D]'>Good Vibes.</span>
+              </h1>
+
+              <p className='mt-7 max-w-md text-base leading-7 text-white/85'>
+                Tempat untuk tumbuh, berkarya, berdampak, dan berbagi kebaikan bersama generasi muda.
+              </p>
+
+              {/* Keywords */}
+              <div className='mt-8 flex flex-wrap gap-3'>
+                <span className='rounded-full bg-white px-4 py-2 text-sm font-semibold text-[#172536]'>Grow</span>
+
+                <span className='rounded-full bg-[#EFCB2D] px-4 py-2 text-sm font-semibold text-[#8E2730]'>
+                  Together
+                </span>
+
+                <span className='rounded-full bg-red-500 px-4 py-2 text-sm font-semibold text-white'>Spread</span>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className='flex items-center justify-between text-sm text-[#8E2730]'>
+              <span className='text-white'>HEYJONG COMMUNITY</span>
+
+              <span>© {new Date().getFullYear()}</span>
+            </div>
+          </div>
+        </section>
+
+        {/* =====================================================
+            RIGHT - LOGIN
+        ====================================================== */}
+        <section className='flex min-h-screen items-center justify-center px-6 py-10 sm:px-10 lg:min-h-0 lg:px-16 xl:px-24'>
+          <div className='w-full max-w-md'>
+            {/* Mobile Brand */}
+            <div className='mb-10 flex items-center gap-3 lg:hidden'>
+              <div className='flex h-11 w-11 items-center justify-center rounded-2xl bg-[#172536] text-lg font-black text-white'>
+                H
+              </div>
+
+              <div>
+                <p className='text-lg font-black'>HEYJONG</p>
+
+                <p className='text-xs font-medium text-[#7196B2]'>COMMUNITY</p>
+              </div>
+            </div>
+
+            {/* Heading */}
+            <div className='mb-8'>
+              <div className='mb-4 flex items-center gap-2'>
+                <span className='h-2.5 w-2.5 rounded-full bg-white' />
+                <span className='h-2.5 w-2.5 rounded-full bg-[#EFCB2D]' />
+                <span className='h-2.5 w-2.5 rounded-full bg-[#8E2730]' />
+              </div>
+
+              <h2 className='text-3xl font-black tracking-tight text-[#172536]'>Selamat Datang, Jongers! 👋</h2>
+
+              <p className='mt-2 text-sm leading-6 text-[#172536]/60'>
+                Masuk ke akunmu dan lanjutkan perjalanan bersama HEYJONG Community.
+              </p>
+            </div>
+
+            {/* Error */}
+            {state?.error && (
+              <div className='mb-6 rounded-2xl border border-[#E58B8B]/40 bg-[#E58B8B]/10 p-4 text-sm font-medium text-[#a84f5b]'>
+                {state.error}
+              </div>
+            )}
+
+            {/* Login Form */}
+            <form action={formAction}>
+              <FieldGroup>
+                {/* Username */}
+                <Field>
+                  <FieldLabel htmlFor='username' className='font-semibold text-[#172536]'>
+                    Username
+                  </FieldLabel>
+
+                  <Input
+                    id='username'
+                    type='text'
+                    name='username'
+                    placeholder='Masukkan username'
+                    required
+                    className='
+                      h-12
+                      rounded-xl
+                      border-[#172536]/15
+                      bg-white
+                      px-4
+                      shadow-sm
+                      transition
+                      placeholder:text-[#172536]/35
+                      focus-visible:border-[#8E2730]
+                      focus-visible:ring-[#8E2730]/20
+                    '
                   />
-                </svg>
-                Continue with Apple
-              </Button>
-              <Button variant='outline' type='button'>
-                <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'>
-                  <path
-                    d='M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z'
-                    fill='currentColor'
+                </Field>
+
+                {/* Password */}
+                <Field>
+                  <FieldLabel htmlFor='password' className='font-semibold text-[#172536]'>
+                    Password
+                  </FieldLabel>
+
+                  <Input
+                    id='password'
+                    type='password'
+                    name='password'
+                    placeholder='Masukkan password'
+                    required
+                    className='
+                      h-12
+                      rounded-xl
+                      border-[#172536]/15
+                      bg-white
+                      px-4
+                      shadow-sm
+                      transition
+                      placeholder:text-[#172536]/35
+                      focus-visible:border-[#8E2730]
+                      focus-visible:ring-[#8E2730]/20
+                    '
                   />
-                </svg>
-                Continue with Google
-              </Button>
-            </Field> */}
-          </FieldGroup>
-        </form>
-        <FieldDescription className='px-6 text-center'>
-          By clicking continue, you agree to our <a href='#'>Terms of Service</a> and <a href='#'>Privacy Policy</a>.
-        </FieldDescription>
+                </Field>
+
+                {/* Submit */}
+                <Field>
+                  <Button
+                    type='submit'
+                    disabled={isPending}
+                    className='
+                      h-12
+                      w-full
+                      rounded-xl
+                      bg-[#8E2730]
+                      text-white
+                      font-bold
+                      shadow-lg
+                      shadow-[#8E2730]/10
+                      transition-all
+                      hover:-translate-y-0.5
+                      hover:bg-[#a73e47]
+                      hover:shadow-xl
+                      disabled:cursor-not-allowed
+                      disabled:opacity-60
+                    '
+                  >
+                    {isPending ? 'Memproses...' : 'Masuk'}
+                  </Button>
+                </Field>
+              </FieldGroup>
+            </form>
+
+            {/* Register */}
+            {/* <FieldDescription className='mt-6 text-center text-[#172536]/55'>
+              Belum punya akun?{' '}
+              <Link href='#' className='font-bold text-[#7196B2] transition hover:text-[#D77B91]'>
+                Daftar sekarang
+              </Link>
+            </FieldDescription> */}
+
+            {/* Divider */}
+            <div className='my-8 flex items-center gap-4'>
+              <div className='h-px flex-1 bg-[#172536]/10' />
+
+              <span className='text-xs font-medium text-[#172536]/35'>HEYJONG COMMUNITY</span>
+
+              <div className='h-px flex-1 bg-[#172536]/10' />
+            </div>
+
+            {/* Terms */}
+            <p className='text-center text-xs leading-5 text-[#172536]/40'>
+              Dengan melanjutkan, kamu menyetujui{' '}
+              <Link href='#' className='underline underline-offset-2 hover:text-[#7196B2]'>
+                Terms of Service
+              </Link>{' '}
+              dan{' '}
+              <Link href='#' className='underline underline-offset-2 hover:text-[#7196B2]'>
+                Privacy Policy
+              </Link>
+              .
+            </p>
+          </div>
+        </section>
       </div>
-    </div>
+    </main>
   );
 }
