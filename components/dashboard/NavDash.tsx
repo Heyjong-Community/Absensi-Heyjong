@@ -15,7 +15,7 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup, // Tambahkan import ini
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -23,14 +23,46 @@ import {
 } from '../ui/dropdown-menu';
 import Link from 'next/link';
 import { actionLogout } from '@/app/actions/authAction';
+import { ChevronDown, LogOut, UserRound, Menu } from 'lucide-react';
 
 export default function NavDash() {
   return (
-    <nav className='p-2 flex items-center justify-between'>
-      <div>
-        <SidebarTrigger />
+    <nav className='sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-[#172536]/10 bg-[#F7F4ED]/95 px-4 backdrop-blur-md sm:px-6'>
+      {/* =====================================================
+          LEFT
+      ====================================================== */}
+      <div className='flex items-center gap-3'>
+        <SidebarTrigger
+          className='
+            size-9
+            rounded-xl
+            text-[#172536]/70
+            hover:bg-[#8E2730]/10
+            hover:text-[#8E2730]
+          '
+        />
+
+        <div className='hidden h-6 w-px bg-[#172536]/10 sm:block' />
+
+        <div className='hidden sm:block'>
+          <p className='text-sm font-semibold text-[#172536]'>Heyjong Community</p>
+
+          <p className='text-[11px] text-[#172536]/40'>Dashboard Management</p>
+        </div>
       </div>
-      <div>
+
+      {/* =====================================================
+          RIGHT
+      ====================================================== */}
+      <div className='flex items-center gap-3'>
+        {/* Decorative status */}
+        <div className='hidden items-center gap-2 rounded-full border border-[#172536]/10 bg-white px-3 py-1.5 sm:flex'>
+          <span className='h-2 w-2 rounded-full bg-[#EFCB2D]' />
+
+          <span className='text-xs font-semibold text-[#172536]/60'>Admin Dashboard</span>
+        </div>
+
+        {/* Profile */}
         <Dialog>
           <DropdownMenu>
             <DropdownMenuTrigger
@@ -38,47 +70,186 @@ export default function NavDash() {
                 <button
                   type='button'
                   id='profile'
-                  className='border-primary size-8 overflow-hidden rounded-full border-2 bg-black cursor-pointer'
-                />
+                  className='
+                    group
+                    flex
+                    h-10
+                    items-center
+                    gap-2
+                    rounded-xl
+                    border
+                    border-[#172536]/10
+                    bg-white
+                    px-2
+                    shadow-sm
+                    transition-all
+                    hover:border-[#8E2730]/20
+                    hover:shadow-md
+                  '
+                >
+                  {/* Avatar */}
+                  <div
+                    className='
+                      flex
+                      size-8
+                      items-center
+                      justify-center
+                      rounded-lg
+                      bg-[#8E2730]
+                      text-white
+                    '
+                  >
+                    <UserRound className='size-4' />
+                  </div>
+
+                  {/* User name */}
+                  <div className='hidden text-left sm:block'>
+                    <p className='text-xs font-bold text-[#172536]'>Admin</p>
+
+                    <p className='text-[10px] text-[#172536]/40'>Administrator</p>
+                  </div>
+
+                  <ChevronDown
+                    className='
+                      ml-1
+                      size-4
+                      text-[#172536]/40
+                      transition-transform
+                      group-data-[state=open]:rotate-180
+                    '
+                  />
+                </button>
               }
             />
 
-            <DropdownMenuContent>
-              {/* Bungkus label dan item di dalam DropdownMenuGroup */}
+            <DropdownMenuContent
+              align='end'
+              sideOffset={8}
+              className='
+                w-56
+                rounded-xl
+                border
+                border-[#172536]/10
+                bg-white
+                p-1.5
+                shadow-xl
+              '
+            >
               <DropdownMenuGroup>
-                <DropdownMenuLabel>Akun Saya</DropdownMenuLabel>
-                <DropdownMenuSeparator />
+                <DropdownMenuLabel className='px-3 py-2'>
+                  <div>
+                    <p className='text-sm font-bold text-[#172536]'>Akun Saya</p>
 
+                    <p className='mt-0.5 text-xs text-[#172536]/40'>Kelola akun Anda</p>
+                  </div>
+                </DropdownMenuLabel>
+
+                <DropdownMenuSeparator className='bg-[#172536]/10' />
+
+                {/* Profile */}
                 <DropdownMenuItem
+                  className='
+                    cursor-pointer
+                    rounded-lg
+                    px-3
+                    py-2.5
+                    text-[#172536]/70
+                    outline-none
+                    focus:bg-[#8E2730]/5
+                    focus:text-[#8E2730]
+                  '
                   render={
-                    <Link href='/dashboard/account' className='w-full cursor-pointer'>
-                      Profil
+                    <Link href='/dashboard/account' className='flex w-full items-center gap-3'>
+                      <div className='flex size-8 items-center justify-center rounded-lg bg-[#172536]/5'>
+                        <UserRound className='size-4' />
+                      </div>
+
+                      <div>
+                        <p className='text-sm font-semibold'>Profil</p>
+
+                        <p className='text-[10px] text-[#172536]/40'>Informasi akun</p>
+                      </div>
                     </Link>
                   }
                 />
 
-                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                {/* Logout */}
+                <DropdownMenuItem
+                  className='
+                    cursor-pointer
+                    rounded-lg
+                    px-3
+                    py-2.5
+                    text-red-500
+                    outline-none
+                    focus:bg-red-50
+                    focus:text-red-600
+                  '
+                  onSelect={(e) => e.preventDefault()}
+                >
                   <DialogTrigger
                     nativeButton={false}
-                    render={<span className='w-full cursor-pointer text-red-600'>Logout</span>}
+                    render={
+                      <span className='flex w-full items-center gap-3'>
+                        <div className='flex size-8 items-center justify-center rounded-lg bg-red-50'>
+                          <LogOut className='size-4' />
+                        </div>
+
+                        <div>
+                          <p className='text-sm font-semibold'>Logout</p>
+
+                          <p className='text-[10px] text-red-400'>Keluar dari dashboard</p>
+                        </div>
+                      </span>
+                    }
                   />
                 </DropdownMenuItem>
               </DropdownMenuGroup>
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <DialogContent className='sm:max-w-md'>
+          {/* =================================================
+              LOGOUT DIALOG
+          ================================================== */}
+
+          <DialogContent
+            className='
+              rounded-2xl
+              border-[#172536]/10
+              bg-[#F7F4ED]
+              sm:max-w-md
+            '
+          >
             <DialogHeader>
-              <DialogTitle className='text-black'>Konfirmasi Logout</DialogTitle>
-              <DialogDescription className='text-text-light'>Apakah kamu yakin ingin keluar?</DialogDescription>
+              <div className='mb-2 flex size-12 items-center justify-center rounded-xl bg-[#8E2730]/10'>
+                <LogOut className='size-5 text-[#8E2730]' />
+              </div>
+
+              <DialogTitle className='text-lg font-black text-[#172536]'>Konfirmasi Logout</DialogTitle>
+
+              <DialogDescription className='text-sm text-[#172536]/50'>
+                Apakah kamu yakin ingin keluar dari dashboard Heyjong Community?
+              </DialogDescription>
             </DialogHeader>
 
-            <DialogFooter className='flex justify-end gap-2'>
+            <DialogFooter className='mt-4 flex flex-row justify-end gap-2'>
               <DialogClose
                 render={
                   <button
                     type='button'
-                    className='rounded-md border border-gray-600 px-3 py-2 text-sm text-gray-800 hover:bg-gray-100'
+                    className='
+                      rounded-xl
+                      border
+                      border-[#172536]/10
+                      bg-white
+                      px-4
+                      py-2.5
+                      text-sm
+                      font-semibold
+                      text-[#172536]/60
+                      transition
+                      hover:bg-[#172536]/5
+                    '
                   >
                     Batal
                   </button>
@@ -88,7 +259,19 @@ export default function NavDash() {
               <button
                 type='button'
                 onClick={() => actionLogout()}
-                className='bg-primary hover:bg-primary/80 rounded-md px-3 py-2 text-sm font-semibold text-white'
+                className='
+                  rounded-xl
+                  bg-[#8E2730]
+                  px-4
+                  py-2.5
+                  text-sm
+                  font-bold
+                  text-white
+                  shadow-sm
+                  transition
+                  hover:bg-[#a73e47]
+                  hover:shadow-md
+                '
               >
                 Logout
               </button>

@@ -1,15 +1,11 @@
-import React from 'react';
 import { listEvent } from '../../services/event';
-import { Button } from '../ui/button';
-import { CalendarDays, MapPin } from 'lucide-react';
-import Link from 'next/link';
 import CardEvent from '../CardEvent';
 
 export default async function ListEvent() {
   const events = await listEvent();
   return (
     <div>
-      <div className='w-full lg:w-1/2 mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
+      <div className='w-full mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3'>
         {events.map((event) => (
           <CardEvent key={event.id} event={event} />
           //   <div key={event.id} id='card' className='rounded-lg shadow-lg p-4'>

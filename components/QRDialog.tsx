@@ -10,7 +10,7 @@ export default function QRDialog({ slug }: { slug: string }) {
   const [qrImageUrl, setQrImageUrl] = useState<string>('');
 
   const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
-  const attendanceUrl = `${baseUrl}/event/${slug}`;
+  const attendanceUrl = `${baseUrl}/attendance/${slug}`;
 
   useEffect(() => {
     const generateQRCode = async () => {

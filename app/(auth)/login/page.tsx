@@ -40,7 +40,7 @@ export default function LoginPage() {
           <div className='relative z-10 flex w-full flex-col justify-between p-12 xl:p-16'>
             {/* Logo */}
             <div>
-              <Link href='#' className='inline-flex items-center'>
+              <Link href='/' className='inline-flex items-center'>
                 {/* <div className='flex h-12 w-12 items-center justify-center rounded-2xl bg-[#172536] text-lg font-black text-white shadow-lg'>
                   H
                 </div> */}

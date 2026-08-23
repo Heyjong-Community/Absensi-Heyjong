@@ -1,13 +1,15 @@
 'use client';
 
 import { MemberHeyjong, StatusMemberHeyjong } from '@/types/member';
-import { useState } from 'react';
+import { useActionState, useState } from 'react';
 import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList } from './ui/combobox';
 import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { cn } from '@/lib/utils';
 import { HandHeart, BadgeCheck, Briefcase, Crown, CalendarDays, UserSearch } from 'lucide-react';
+import { InitState, responseState } from '@/types/global';
+import { actionAddAttendance } from '@/app/actions/attendanceAction';
 
 interface AttendanceFormProps {
   event: { id: string; nama: string } | null;
@@ -53,6 +55,11 @@ export default function AttendanceForm({ event, members }: AttendanceFormProps) 
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedMember, setSelectedMember] = useState<string>('');
 
+  const [state, formAction, isPending] = useActionState<InitState, FormData>(
+    (prevState, formData) => actionAddAttendance(prevState, formData),
+    responseState,
+  );
+
   const filteredMembers = members.filter((member) => {
     const matchesStatus = member.status === status;
     const matchesSearch = member.namaLengkap?.toLowerCase().includes(searchQuery.toLowerCase());
@@ -62,7 +69,7 @@ export default function AttendanceForm({ event, members }: AttendanceFormProps) 
   const activeOption = STATUS_OPTIONS.find((opt) => opt.value === status);
 
   return (
-    <div className='mx-auto w-full h-full max-w-lg'>
+    <div className='mx-auto w-full h-full'>
       <div className='relative overflow-hidden rounded-3xl border border-orange-100 bg-white shadow-xl shadow-orange-100/50'>
         {/* Header gradient — identitas visual komunitas */}
         <div className='relative bg-linear-to-br from-[#DF334D] via-[#EE7032] to-[#E5D92C] px-6 py-7 text-white'>
@@ -79,7 +86,7 @@ export default function AttendanceForm({ event, members }: AttendanceFormProps) 
           </div>
         </div>
 
-        <form className='space-y-7 px-6 py-7'>
+        <form action={formAction} className='space-y-7 px-6 py-7'>
           <input type='hidden' name='eventId' value={event?.id ?? ''} />
 
           {/* Status selector — segmented pills berwarna */}
@@ -123,36 +130,46 @@ export default function AttendanceForm({ event, members }: AttendanceFormProps) 
                 className='h-12 rounded-xl border-slate-200 focus-visible:ring-orange-300'
               />
             ) : (
-              <Combobox value={selectedMember} onValueChange={(val) => setSelectedMember(val ?? '')}>
-                <div className='relative'>
-                  <UserSearch className='pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400' />
-                  <ComboboxInput
-                    placeholder='Cari nama...'
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className='h-12 rounded-xl border-slate-200 pl-9 focus-visible:ring-orange-300'
-                  />
-                </div>
-                <ComboboxContent className='rounded-xl border-slate-200'>
-                  {filteredMembers.length === 0 ? (
-                    <ComboboxEmpty className='py-6 text-center text-sm text-slate-400'>
-                      Nama tidak ditemukan.
-                    </ComboboxEmpty>
-                  ) : (
-                    <ComboboxList>
-                      {filteredMembers.map((member) => (
-                        <ComboboxItem
-                          key={member.id}
-                          value={member.namaLengkap}
-                          className='rounded-lg data-highlighted:bg-orange-50 data-highlighted:text-orange-700'
-                        >
-                          {member.namaLengkap}
-                        </ComboboxItem>
-                      ))}
-                    </ComboboxList>
-                  )}
-                </ComboboxContent>
-              </Combobox>
+              <>
+                <input type='hidden' name='nama' value={selectedMember} />
+                <Combobox
+                  value={selectedMember}
+                  onValueChange={(val) => {
+                    const selected = val ?? '';
+                    setSelectedMember(selected);
+                    setSearchQuery(selected);
+                  }}
+                >
+                  <div className='relative'>
+                    <UserSearch className='pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400' />
+                    <ComboboxInput
+                      placeholder='Cari nama...'
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className='h-12 rounded-xl border-slate-200 pl-9 focus-visible:ring-orange-300'
+                    />
+                  </div>
+                  <ComboboxContent className='rounded-xl border-slate-200'>
+                    {filteredMembers.length === 0 ? (
+                      <ComboboxEmpty className='py-6 text-center text-sm text-slate-400'>
+                        Nama tidak ditemukan.
+                      </ComboboxEmpty>
+                    ) : (
+                      <ComboboxList>
+                        {filteredMembers.map((member) => (
+                          <ComboboxItem
+                            key={member.id}
+                            value={member.namaLengkap}
+                            className='rounded-lg data-highlighted:bg-orange-50 data-highlighted:text-orange-700'
+                          >
+                            {member.namaLengkap}
+                          </ComboboxItem>
+                        ))}
+                      </ComboboxList>
+                    )}
+                  </ComboboxContent>
+                </Combobox>
+              </>
             )}
             {activeOption && status !== 'Volunteer' && (
               <p className='text-xs text-slate-400'>
@@ -161,9 +178,17 @@ export default function AttendanceForm({ event, members }: AttendanceFormProps) 
             )}
           </div>
 
+          {state.error && (
+            <section className='w-full lg:w-1/2'>
+              <div className='bg-red-100 border border-red-300 rounded-lg py-2 px-4'>
+                <p className='text-sm text-red-500'>Terjadi error, gagal tambah event.</p>
+              </div>
+            </section>
+          )}
+
           <button
             type='submit'
-            className='w-full rounded-xl bg-linear-to-r from-[#DF334D] via-[#EE7032] to-[#E5D92C] py-3 text-sm font-semibold text-white shadow-lg shadow-orange-200 transition-transform duration-200 hover:scale-[1.01] active:scale-[0.99]'
+            className='w-full rounded-xl cursor-pointer bg-linear-to-r from-[#DF334D] via-[#EE7032] to-[#E5D92C] py-3 text-sm font-semibold text-white shadow-lg shadow-orange-200 transition-transform duration-200 hover:scale-[1.01] active:scale-[0.99]'
           >
             Catat Kehadiran
           </button>
