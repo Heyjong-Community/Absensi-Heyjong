@@ -245,7 +245,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             SETTINGS
         ==================================================== */}
 
-        <SidebarGroup className='mt-auto py-3'>
+        {/* <SidebarGroup className='mt-auto py-3'>
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
@@ -278,7 +278,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
-        </SidebarGroup>
+        </SidebarGroup> */}
       </SidebarContent>
 
       {/* =====================================================
