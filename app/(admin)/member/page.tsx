@@ -4,6 +4,7 @@ import { Users, UserCheck, UserRoundPlus, UserX, Plus, ShieldCheck } from 'lucid
 import Link from 'next/link';
 
 import { columnsMemberHeyjong } from './column';
+export const dynamic = 'force-dynamic';
 
 export default async function MemberDashPage() {
   const members = await listMemberHeyjong();
