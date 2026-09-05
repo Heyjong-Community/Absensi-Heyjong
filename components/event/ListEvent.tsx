@@ -1,6 +1,8 @@
 import { listEvent } from '../../services/event';
 import CardEvent from '../CardEvent';
 
+export const dynamic = 'force-dynamic';
+
 export default async function ListEvent() {
   const events = await listEvent();
   return (

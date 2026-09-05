@@ -1,6 +1,8 @@
 import { ArrowRight, CalendarDays, CheckCircle2, ChevronRight, Clock3, Users, UserCheck, Plus } from 'lucide-react';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
+
 export default function DashboardPage() {
   return (
     <main className='min-h-screen w-full bg-[#F7F4ED] text-[#172536]'>

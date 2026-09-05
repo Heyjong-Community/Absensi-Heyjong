@@ -2,8 +2,9 @@ import { DataTable } from '@/components/data-table';
 import { listMemberHeyjong } from '@/services/member';
 import { Plus, ShieldCheck, UserCheck, UserRoundPlus, Users } from 'lucide-react';
 import Link from 'next/link';
-
 import { columnsMemberHeyjong } from './column';
+
+export const dynamic = 'force-dynamic';
 
 export default async function MemberDashPage() {
   const members = await listMemberHeyjong();

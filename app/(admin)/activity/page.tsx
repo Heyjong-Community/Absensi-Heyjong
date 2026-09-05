@@ -7,6 +7,8 @@ import { DataTable } from '@/components/data-table';
 import Link from 'next/link';
 import { listEvent } from '@/services/event';
 
+export const dynamic = 'force-dynamic';
+
 export default async function EventPage() {
   const events = await listEvent();
 

@@ -4,6 +4,8 @@ import { DataTable } from '@/components/data-table';
 import { getAllAttendee } from '@/services/attendance';
 import { columns } from './columns';
 
+export const dynamic = 'force-dynamic';
+
 export default async function AbsensiDashPage() {
   const attendee = await getAllAttendee();
 
