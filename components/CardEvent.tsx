@@ -180,7 +180,7 @@ export default function CardEvent({ event }: CardEvent) {
               hover:shadow-md
             '
           >
-            Absen Sekarang
+            Absen
             <ArrowRight className='size-4' />
           </Link>
 
