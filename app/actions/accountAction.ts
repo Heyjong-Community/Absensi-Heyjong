@@ -3,6 +3,7 @@
 import { createNewAccessAccount } from '@/services/account';
 import type { RoleUser, StatusUser } from '@/prisma/generated/prisma/client';
 import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 
 export type AccessAccountState = {
   success: boolean;
@@ -31,6 +32,7 @@ export async function actionNewAccessAccount(
   }
 
   if (isSuccess) {
+    revalidatePath('/account');
     redirect('/account');
   }
 

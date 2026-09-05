@@ -4,6 +4,7 @@ import { InitState } from '@/types/global';
 import { signIn, signOut } from '../auth';
 import { AuthError } from 'next-auth';
 import { redirect } from 'next/navigation';
+import { revalidatePath } from 'next/cache';
 
 export async function actionLogin(prevState: InitState, formData: FormData): Promise<InitState> {
   let isSuccess = false;
@@ -37,6 +38,7 @@ export async function actionLogin(prevState: InitState, formData: FormData): Pro
   }
 
   if (isSuccess === true) {
+    revalidatePath('/dashboard');
     redirect('/dashboard');
   }
 

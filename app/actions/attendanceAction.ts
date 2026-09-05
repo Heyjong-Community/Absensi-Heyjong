@@ -3,6 +3,7 @@
 import { addAttendance } from '@/services/attendance';
 import { StatusAttendee } from '@/types/absen';
 import { InitState } from '@/types/global';
+import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 export async function actionAddAttendance(prevState: InitState, formData: FormData): Promise<InitState> {
@@ -25,6 +26,7 @@ export async function actionAddAttendance(prevState: InitState, formData: FormDa
   }
 
   if (isSuccess === true) {
+    revalidatePath('/success');
     redirect('/success');
   }
   return { success: false, error: null };

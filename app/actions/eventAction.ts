@@ -2,6 +2,7 @@
 
 import { addNewEvent } from '@/services/event';
 import { InitState } from '@/types/global';
+import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 export async function actionAddNewEvent(prevState: InitState, formData: FormData): Promise<InitState> {
@@ -38,6 +39,7 @@ export async function actionAddNewEvent(prevState: InitState, formData: FormData
   }
 
   if (isSuccess === true) {
+    revalidatePath('/activity');
     redirect('/activity');
   }
   return { success: false, error: null };

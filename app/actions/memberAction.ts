@@ -2,6 +2,7 @@
 
 import { addMemberHeyjong } from '@/services/member';
 import { InitState } from '@/types/global';
+import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 export async function actionAddMemberHeyjong(prevState: InitState, formData: FormData): Promise<InitState> {
@@ -26,6 +27,7 @@ export async function actionAddMemberHeyjong(prevState: InitState, formData: For
   }
 
   if (isSuccess === true) {
+    revalidatePath('/member');
     redirect('/member');
   }
   return { success: false, error: null };
