@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
-import { SidebarTrigger } from '../ui/sidebar';
+import { actionLogout } from '@/app/actions/authAction';
+import { ChevronDown, LogOut, UserRound } from 'lucide-react';
+import Link from 'next/link';
 import {
   Dialog,
   DialogClose,
@@ -21,11 +22,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
-import Link from 'next/link';
-import { actionLogout } from '@/app/actions/authAction';
-import { ChevronDown, LogOut, UserRound, Menu } from 'lucide-react';
+import { SidebarTrigger } from '../ui/sidebar';
+import { useSession } from 'next-auth/react';
 
 export default function NavDash() {
+  const { data: session } = useSession();
   return (
     <nav className='sticky top-0 z-40 flex h-16 w-full items-center justify-between border-b border-[#172536]/10 bg-[#F7F4ED]/95 px-4 backdrop-blur-md sm:px-6'>
       {/* =====================================================
@@ -104,9 +105,9 @@ export default function NavDash() {
 
                   {/* User name */}
                   <div className='hidden text-left sm:block'>
-                    <p className='text-xs font-bold text-[#172536]'>Admin</p>
+                    <p className='text-xs font-bold text-[#172536]'>{session?.user.email}</p>
 
-                    <p className='text-[10px] text-[#172536]/40'>Administrator</p>
+                    <p className='text-[10px] text-[#172536]/40'>{session?.user.role}</p>
                   </div>
 
                   <ChevronDown
