@@ -1,8 +1,9 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowDown, ArrowRight, CalendarDays, Sparkles } from 'lucide-react';
-
 import ListEvent from '@/components/event/ListEvent';
+
+export const dynamic = 'force-dynamic';
 
 export default function Home() {
   return (
