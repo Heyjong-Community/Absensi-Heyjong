@@ -31,6 +31,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           id: user.id,
           name: user.nama,
           email: user.username,
+          username: user.username,
           role: user.role,
         };
       },
@@ -58,5 +59,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   session: {
     strategy: 'jwt',
   },
+  trustHost: true,
   secret: process.env.NEXT_AUTH_SECRET,
 });
