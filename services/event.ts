@@ -35,3 +35,35 @@ export async function addNewEvent(
     },
   });
 }
+
+export async function getEventById(id: string) {
+  return prisma.event.findUnique({
+    where: {
+      id,
+    },
+  });
+}
+
+export async function updateEventById(
+  id: string,
+  nama: string,
+  slug: string,
+  tanggalPelaksanaan: Date,
+  tanggalSelesai: Date,
+  lokasi?: string,
+  deskripsi?: string,
+) {
+  return prisma.event.update({
+    where: {
+      id,
+    },
+    data: {
+      nama,
+      slug,
+      tanggalPelaksanaan,
+      tanggalSelesai,
+      lokasi,
+      deskripsi,
+    },
+  });
+}

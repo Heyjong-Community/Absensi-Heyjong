@@ -1,6 +1,6 @@
 'use server';
 
-import { addNewEvent } from '@/services/event';
+import { addNewEvent, getEventById, updateEventById } from '@/services/event';
 import { InitState } from '@/types/global';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
@@ -43,4 +43,51 @@ export async function actionAddNewEvent(prevState: InitState, formData: FormData
     redirect('/activity');
   }
   return { success: false, error: null };
+}
+
+export async function actionUpdateEvent(formData: FormData): Promise<void> {
+  try {
+    const eventId = (formData.get('eventId') as string | null) ?? '';
+    const nama = (formData.get('nama') as string | null) ?? '';
+    const slug = (formData.get('slug') as string | null) ?? '';
+    const tanggalPelaksanaanRaw = (formData.get('tanggalPelaksanaan') as string | null) ?? '';
+    const tanggalSelesaiRaw = (formData.get('tanggalSelesai') as string | null) ?? '';
+    const lokasi = (formData.get('lokasi') as string | null) ?? '';
+    const deskripsi = (formData.get('deskripsi') as string | null) ?? '';
+
+    if (!eventId || !nama || !slug || !tanggalPelaksanaanRaw || !tanggalSelesaiRaw) {
+      throw new Error('Semua field wajib diisi');
+    }
+
+    const existingEvent = await getEventById(eventId);
+    if (!existingEvent) {
+      throw new Error('Event tidak ditemukan');
+    }
+
+    const tanggalPelaksanaan = new Date(tanggalPelaksanaanRaw);
+    if (isNaN(tanggalPelaksanaan.getTime())) {
+      throw new Error('Format tanggal pelaksanaan tidak valid');
+    }
+
+    const tanggalSelesai = new Date(tanggalSelesaiRaw);
+    if (isNaN(tanggalSelesai.getTime())) {
+      throw new Error('Format tanggal selesai tidak valid');
+    }
+
+    await updateEventById(
+      eventId,
+      nama,
+      slug,
+      tanggalPelaksanaan,
+      tanggalSelesai,
+      lokasi || undefined,
+      deskripsi || undefined,
+    );
+
+    revalidatePath('/activity');
+    redirect('/activity');
+  } catch (error) {
+    console.log('error - ', error);
+    throw new Error('Gagal memperbarui event');
+  }
 }
