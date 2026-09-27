@@ -1,8 +1,7 @@
 import { CalendarDays, CheckCircle2, ClipboardCheck, Users } from 'lucide-react';
 
-import { DataTable } from '@/components/data-table';
 import { getAllAttendee } from '@/services/attendance';
-import { columns } from './columns';
+import FilterableAbsensiTable from './FilterableAbsensiTable';
 
 export const dynamic = 'force-dynamic';
 
@@ -122,7 +121,7 @@ export default async function AbsensiDashPage() {
           </div>
 
           <div className='p-4 sm:p-6'>
-            <DataTable columns={columns} data={attendee || []} />
+            <FilterableAbsensiTable attendee={attendee || []} />
           </div>
         </section>
       </div>
