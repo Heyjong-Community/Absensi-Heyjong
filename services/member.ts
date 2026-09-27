@@ -23,3 +23,31 @@ export async function addMemberHeyjong(
     },
   });
 }
+
+export async function getMemberById(id: string) {
+  return prisma.member.findUnique({
+    where: {
+      id,
+    },
+  });
+}
+
+export async function updateMemberHeyjong(
+  id: string,
+  namaLengkap: string,
+  panggilan: string,
+  gender: 'LakiLaki' | 'Perempuan',
+  status: 'Manajemen' | 'Pengurus' | 'Staff' | 'Member' | 'Volunteer',
+) {
+  return prisma.member.update({
+    where: {
+      id,
+    },
+    data: {
+      namaLengkap,
+      panggilan,
+      gender,
+      status,
+    },
+  });
+}

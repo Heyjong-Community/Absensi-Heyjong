@@ -3,9 +3,11 @@
 import StatusBadge from '@/components/StatusBadge';
 import { StatusMemberHeyjong } from '@/types/member';
 import { ColumnDef } from '@tanstack/react-table';
-import { UserRound } from 'lucide-react';
+import { Pencil, UserRound } from 'lucide-react';
+import Link from 'next/link';
 
 interface MemberHeyjong {
+  id: string;
   namaLengkap: string;
   panggilan: string;
   gender: string;
@@ -27,7 +29,7 @@ export const columnsMemberHeyjong: ColumnDef<MemberHeyjong>[] = [
     header: 'Nama Lengkap',
 
     cell: ({ row }) => (
-      <div className='flex items-center gap-3 min-w-[220px]'>
+      <div className='flex items-center gap-3 min-w-55'>
         <div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#EFCB2D]/25'>
           <UserRound className='h-4 w-4 text-[#8E2730]' />
         </div>
@@ -76,6 +78,38 @@ export const columnsMemberHeyjong: ColumnDef<MemberHeyjong>[] = [
       return (
         <div className='flex justify-center'>
           <StatusBadge status={status} />
+        </div>
+      );
+    },
+  },
+
+  {
+    header: 'Action',
+    cell: ({ row }) => {
+      const id = row.original.id;
+
+      return (
+        <div className='flex items-center justify-center'>
+          <Link
+            href={`/member/edit/${id}`}
+            title='Edit member'
+            className='
+              inline-flex
+              size-9
+              items-center
+              justify-center
+              rounded-lg
+              border
+              border-[#172536]/10
+              text-[#172536]/60
+              transition-colors
+              hover:border-[#8E2730]/20
+              hover:bg-[#8E2730]/5
+              hover:text-[#8E2730]
+            '
+          >
+            <Pencil className='h-4 w-4' />
+          </Link>
         </div>
       );
     },
