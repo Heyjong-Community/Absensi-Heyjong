@@ -1,25 +1,10 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
-  // output   = "../lib/generated/prisma"
   output   = "./generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-}
-
-enum RoleUser {
-  SuperAdmin
-  Admin
-  Pengurus
-  Staff
-  Member
-  Volunteer
 }
 
 model User {
@@ -31,10 +16,9 @@ model User {
   status    StatusUser @default(Aktif)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-
-  events   Event[]
-  accounts Account[]
-  sessions Session[]
+  accounts  Account[]
+  events    Event[]
+  sessions  Session[]
 }
 
 model Account {
@@ -43,15 +27,14 @@ model Account {
   type              String
   provider          String
   providerAccountId String
-  refresh_token     String? @db.Text
-  access_token      String? @db.Text
+  refresh_token     String?
+  access_token      String?
   expires_at        Int?
   token_type        String?
   scope             String?
-  id_token          String? @db.Text
+  id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([provider, providerAccountId])
 }
@@ -61,56 +44,35 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-enum StatusUser {
-  Aktif
-  NonAktif
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Event {
-  id                 String   @id @default(uuid())
-  nama               String   @db.VarChar(255)
-  slug               String   @db.VarChar(255)
-  tanggalPelaksanaan DateTime @db.Timestamptz()
-  tanggalSelesai     DateTime @db.Timestamptz()
-  lokasi             String?  @db.VarChar(255)
-  deskripsi          String?  @db.Text
-  isActive           Boolean  @default(true) @db.Boolean
+  id                 String       @id @default(uuid())
+  nama               String       @db.VarChar(255)
+  slug               String       @db.VarChar(255)
+  tanggalPelaksanaan DateTime     @db.Timestamptz(6)
+  tanggalSelesai     DateTime     @db.Timestamptz(6)
+  lokasi             String?      @db.VarChar(255)
+  deskripsi          String?
+  isActive           Boolean      @default(true)
   createdBy          String?
-  createdAt          DateTime @default(now())
-  updatedAt          DateTime @updatedAt
-
-  user        User?        @relation(fields: [createdBy], references: [id])
-  attendances Attendance[]
-}
-
-enum StatusPeople {
-  Manajemen
-  Pengurus
-  Staff
-  Member
-  Volunteer
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  attendances        Attendance[]
+  user               User?        @relation(fields: [createdBy], references: [id])
 }
 
 model Attendance {
   id        String       @id @default(uuid())
   eventId   String
-  nama      String       @db.VarChar()
+  nama      String       @db.VarChar
   status    StatusPeople @default(Member)
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
-
-  event Event @relation(fields: [eventId], references: [id])
+  event     Event        @relation(fields: [eventId], references: [id])
 
   @@unique([eventId, nama])
-}
-
-enum Gender {
-  LakiLaki
-  Perempuan
 }
 
 model Member {
@@ -121,4 +83,31 @@ model Member {
   status      StatusPeople @default(Member)
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
+}
+
+enum RoleUser {
+  SuperAdmin
+  Admin
+  Pengurus
+  Staff
+  Member
+  Volunteer
+}
+
+enum StatusUser {
+  Aktif
+  NonAktif
+}
+
+enum StatusPeople {
+  Manajemen
+  Pengurus
+  Staff
+  Member
+  Volunteer
+}
+
+enum Gender {
+  LakiLaki
+  Perempuan
 }

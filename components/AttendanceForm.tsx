@@ -7,7 +7,7 @@ import { Input } from './ui/input';
 import { Label } from './ui/label';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
 import { cn } from '@/lib/utils';
-import { HandHeart, BadgeCheck, Briefcase, Crown, CalendarDays, UserSearch } from 'lucide-react';
+import { HandHeart, BadgeCheck, Briefcase, Crown, CalendarDays, UserSearch, Brain } from 'lucide-react';
 import { InitState, responseState } from '@/types/global';
 import { actionAddAttendance } from '@/app/actions/attendanceAction';
 
@@ -24,31 +24,31 @@ const STATUS_OPTIONS: {
   icon: React.ElementType;
   activeClass: string;
 }[] = [
-  {
-    value: 'Volunteer',
-    label: 'Volunteer',
-    icon: HandHeart,
-    activeClass: 'border-orange-400 bg-orange-50 text-orange-600 ring-orange-200',
-  },
-  {
-    value: 'Member',
-    label: 'Member',
-    icon: BadgeCheck,
-    activeClass: 'border-emerald-400 bg-emerald-50 text-emerald-600 ring-emerald-200',
-  },
-  {
-    value: 'Staff',
-    label: 'Staff',
-    icon: Briefcase,
-    activeClass: 'border-sky-400 bg-sky-50 text-sky-600 ring-sky-200',
-  },
-  {
-    value: 'Pengurus',
-    label: 'Pengurus',
-    icon: Crown,
-    activeClass: 'border-violet-400 bg-violet-50 text-violet-600 ring-violet-200',
-  },
-];
+    {
+      value: 'Volunteer',
+      label: 'Volunteer',
+      icon: HandHeart,
+      activeClass: 'border-orange-400 bg-orange-50 text-orange-600 ring-orange-200',
+    },
+    {
+      value: 'Member',
+      label: 'Member',
+      icon: BadgeCheck,
+      activeClass: 'border-emerald-400 bg-emerald-50 text-emerald-600 ring-emerald-200',
+    },
+    {
+      value: 'Pengurus',
+      label: 'Pengurus',
+      icon: Crown,
+      activeClass: 'border-sky-400 bg-sky-50 text-sky-600 ring-sky-200',
+    },
+    {
+      value: 'Manajemen',
+      label: 'Manajemen',
+      icon: Brain,
+      activeClass: 'border-violet-400 bg-violet-50 text-violet-600 ring-violet-200',
+    },
+  ];
 
 export default function AttendanceForm({ event, members }: AttendanceFormProps) {
   const [status, setStatus] = useState<StatusMemberHeyjong>('Volunteer');

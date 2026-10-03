@@ -1,9 +1,71 @@
 import { ArrowRight, CalendarDays, CheckCircle2, ChevronRight, Clock3, Users, UserCheck, Plus } from 'lucide-react';
 import Link from 'next/link';
+import { prisma } from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const totalEvents = await prisma.event.count();
+  const totalMembers = await prisma.member.count();
+
+  const startOfToday = new Date();
+  startOfToday.setHours(0, 0, 0, 0);
+  const endOfToday = new Date();
+  endOfToday.setHours(23, 59, 59, 999);
+
+  const attendanceToday = await prisma.attendance.count({
+    where: {
+      createdAt: {
+        gte: startOfToday,
+        lte: endOfToday,
+      },
+    },
+  });
+
+  const activeEventsCount = await prisma.event.count({
+    where: {
+      isActive: true,
+    },
+  });
+
+  const recentEvents = await prisma.event.findMany({
+    orderBy: {
+      tanggalPelaksanaan: 'desc',
+    },
+    take: 3,
+  });
+
+  const startOfMonth = new Date();
+  startOfMonth.setDate(1);
+  startOfMonth.setHours(0, 0, 0, 0);
+
+  const endOfMonth = new Date(startOfMonth);
+  endOfMonth.setMonth(endOfMonth.getMonth() + 1);
+  endOfMonth.setMilliseconds(-1);
+
+  const eventsThisMonth = await prisma.event.count({
+    where: {
+      tanggalPelaksanaan: {
+        gte: startOfMonth,
+        lte: endOfMonth,
+      },
+    },
+  });
+
+  const attendanceThisMonth = await prisma.attendance.count({
+    where: {
+      createdAt: {
+        gte: startOfMonth,
+        lte: endOfMonth,
+      },
+    },
+  });
+
+  const expectedAttendanceThisMonth = eventsThisMonth * totalMembers;
+  const attendancePercentage = expectedAttendanceThisMonth > 0 
+    ? Math.round((attendanceThisMonth / expectedAttendanceThisMonth) * 100) 
+    : 0;
+  const absentThisMonth = expectedAttendanceThisMonth - attendanceThisMonth;
   return (
     <main className='min-h-screen w-full bg-[#F7F4ED] text-[#172536]'>
       {/* =====================================================
@@ -75,7 +137,7 @@ export default function DashboardPage() {
             <div className='mt-5'>
               <p className='text-sm font-medium text-[#172536]/50'>Total Event</p>
 
-              <p className='mt-1 text-3xl font-black'>24</p>
+              <p className='mt-1 text-3xl font-black'>{totalEvents}</p>
             </div>
           </div>
 
@@ -94,7 +156,7 @@ export default function DashboardPage() {
             <div className='mt-5'>
               <p className='text-sm font-medium text-[#172536]/50'>Total Member</p>
 
-              <p className='mt-1 text-3xl font-black'>186</p>
+              <p className='mt-1 text-3xl font-black'>{totalMembers}</p>
             </div>
           </div>
 
@@ -114,9 +176,9 @@ export default function DashboardPage() {
               <p className='text-sm font-medium text-[#172536]/50'>Kehadiran Hari Ini</p>
 
               <div className='mt-1 flex items-end gap-2'>
-                <p className='text-3xl font-black'>84</p>
+                <p className='text-3xl font-black'>{attendanceToday}</p>
 
-                <p className='mb-1 text-xs font-semibold text-[#8E2730]'>/ 100</p>
+                <p className='mb-1 text-xs font-semibold text-[#8E2730]'>/ {totalMembers}</p>
               </div>
             </div>
           </div>
@@ -134,7 +196,7 @@ export default function DashboardPage() {
             <div className='mt-5'>
               <p className='text-sm font-medium text-white/50'>Event Aktif</p>
 
-              <p className='mt-1 text-3xl font-black'>2</p>
+              <p className='mt-1 text-3xl font-black'>{activeEventsCount}</p>
             </div>
           </div>
         </section>
@@ -178,68 +240,49 @@ export default function DashboardPage() {
               </Link>
             </div>
 
-            {/* Event 1 */}
-            <div className='mt-6 flex items-center gap-4 border-b border-[#172536]/10 pb-5'>
-              <div className='flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-xl bg-[#8E2730] text-white'>
-                <span className='text-[10px] font-bold uppercase'>Aug</span>
+            {recentEvents.length > 0 ? (
+              recentEvents.map((event, index) => {
+                const eventDate = new Date(event.tanggalPelaksanaan);
+                const month = eventDate.toLocaleDateString('en-US', { month: 'short' });
+                const date = eventDate.toLocaleDateString('en-US', { day: '2-digit' });
+                const time = eventDate.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
 
-                <span className='text-lg font-black'>28</span>
+                const isUpcoming = eventDate > new Date();
+                const isToday = eventDate.toDateString() === new Date().toDateString();
+
+                return (
+                  <div key={event.id} className={`mt-${index === 0 ? '6' : '5'} flex items-center gap-4 ${index !== recentEvents.length - 1 ? 'border-b border-[#172536]/10 pb-5' : ''}`}>
+                    <div className={`flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-xl ${index === 0 ? 'bg-[#8E2730] text-white' : 'bg-[#F7F4ED] text-[#8E2730]'}`}>
+                      <span className='text-[10px] font-bold uppercase'>{month}</span>
+
+                      <span className='text-lg font-black'>{date}</span>
+                    </div>
+
+                    <div className='min-w-0 flex-1'>
+                      <h3 className='truncate text-sm font-bold'>{event.nama}</h3>
+
+                      <p className='mt-1 text-xs text-[#172536]/50'>{event.lokasi || 'Community Event'} • {time} WIB</p>
+                    </div>
+
+                    {isUpcoming || isToday ? (
+                      <span className={`hidden rounded-full ${isToday ? 'bg-[#8E2730]/10 text-[#8E2730]' : 'bg-[#EFCB2D]/20 text-[#8E2730]'} px-3 py-1 text-[10px] font-bold sm:block`}>
+                        {isToday ? 'TODAY' : 'UPCOMING'}
+                      </span>
+                    ) : (
+                      <span className='hidden rounded-full bg-[#172536]/5 px-3 py-1 text-[10px] font-bold text-[#172536]/50 sm:block'>
+                        PAST
+                      </span>
+                    )}
+
+                    <ChevronRight className='h-4 w-4 text-[#172536]/30' />
+                  </div>
+                );
+              })
+            ) : (
+              <div className="mt-6 text-center text-sm text-[#172536]/50">
+                Belum ada event
               </div>
-
-              <div className='min-w-0 flex-1'>
-                <h3 className='truncate text-sm font-bold'>Jong Impact #03</h3>
-
-                <p className='mt-1 text-xs text-[#172536]/50'>Community Event • 09:00 WIB</p>
-              </div>
-
-              <span className='hidden rounded-full bg-[#EFCB2D]/20 px-3 py-1 text-[10px] font-bold text-[#8E2730] sm:block'>
-                UPCOMING
-              </span>
-
-              <ChevronRight className='h-4 w-4 text-[#172536]/30' />
-            </div>
-
-            {/* Event 2 */}
-            <div className='mt-5 flex items-center gap-4 border-b border-[#172536]/10 pb-5'>
-              <div className='flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-xl bg-[#F7F4ED] text-[#8E2730]'>
-                <span className='text-[10px] font-bold uppercase'>Aug</span>
-
-                <span className='text-lg font-black'>24</span>
-              </div>
-
-              <div className='min-w-0 flex-1'>
-                <h3 className='truncate text-sm font-bold'>Community Gathering</h3>
-
-                <p className='mt-1 text-xs text-[#172536]/50'>Gathering • 19:00 WIB</p>
-              </div>
-
-              <span className='hidden rounded-full bg-[#8E2730]/10 px-3 py-1 text-[10px] font-bold text-[#8E2730] sm:block'>
-                TODAY
-              </span>
-
-              <ChevronRight className='h-4 w-4 text-[#172536]/30' />
-            </div>
-
-            {/* Event 3 */}
-            <div className='mt-5 flex items-center gap-4'>
-              <div className='flex h-12 w-12 shrink-0 flex-col items-center justify-center rounded-xl bg-[#F7F4ED] text-[#8E2730]'>
-                <span className='text-[10px] font-bold uppercase'>Sep</span>
-
-                <span className='text-lg font-black'>05</span>
-              </div>
-
-              <div className='min-w-0 flex-1'>
-                <h3 className='truncate text-sm font-bold'>Jong Connect</h3>
-
-                <p className='mt-1 text-xs text-[#172536]/50'>Networking • 13:00 WIB</p>
-              </div>
-
-              <span className='hidden rounded-full bg-[#172536]/5 px-3 py-1 text-[10px] font-bold text-[#172536]/50 sm:block'>
-                UPCOMING
-              </span>
-
-              <ChevronRight className='h-4 w-4 text-[#172536]/30' />
-            </div>
+            )}
           </div>
 
           {/* =================================================
@@ -260,19 +303,19 @@ export default function DashboardPage() {
 
             {/* Percentage */}
             <div className='mt-8 flex items-end gap-2'>
-              <span className='text-5xl font-black'>84%</span>
+              <span className='text-5xl font-black'>{attendancePercentage}%</span>
 
               <span className='mb-2 text-xs text-white/50'>bulan ini</span>
             </div>
 
             {/* Progress */}
             <div className='mt-5 h-2 overflow-hidden rounded-full bg-white/15'>
-              <div className='h-full rounded-full bg-[#EFCB2D]' style={{ width: '84%' }} />
+              <div className='h-full rounded-full bg-[#EFCB2D]' style={{ width: `${attendancePercentage}%` }} />
             </div>
 
             <div className='mt-3 flex justify-between text-xs text-white/50'>
-              <span>84 hadir</span>
-              <span>100 total</span>
+              <span>{attendanceThisMonth} hadir</span>
+              <span>{expectedAttendanceThisMonth} total</span>
             </div>
 
             {/* Mini stats */}
@@ -280,13 +323,13 @@ export default function DashboardPage() {
               <div className='rounded-xl bg-white/10 p-4'>
                 <p className='text-xs text-white/45'>Hadir</p>
 
-                <p className='mt-1 text-xl font-black'>84</p>
+                <p className='mt-1 text-xl font-black'>{attendanceThisMonth}</p>
               </div>
 
               <div className='rounded-xl bg-white/10 p-4'>
                 <p className='text-xs text-white/45'>Tidak Hadir</p>
 
-                <p className='mt-1 text-xl font-black'>16</p>
+                <p className='mt-1 text-xl font-black'>{absentThisMonth}</p>
               </div>
             </div>
           </div>
